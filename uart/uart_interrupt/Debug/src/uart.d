@@ -1,4 +1,4 @@
-src/main.d src/main.o: ../src/main.c ../src/asf.h \
+src/uart.d src/uart.o: ../src/uart.c ../src/asf.h \
  ../src/ASF/common/boards/user_board/user_board.h \
  ../src/config/conf_board.h ../src/ASF/common/boards/board.h \
  ../src/ASF/mega/utils/compiler.h \
