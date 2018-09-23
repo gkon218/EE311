@@ -1,16 +1,16 @@
 
 #include <asf.h>
-#include <stdint.h>
 #define F_CPU 16000000UL
 
-
-
+#include <stdint.h>
+#include <avr/interrupt.h>
 
 #define BAUD 9600
 #define BAUD_PRE (F_CPU/BAUD/16) - 1
 
 void uart_init(unsigned int prescaler);
 void uart_transmit (uint8_t value);
+void transmit_string(char* string);
 
 
 void uart_init(unsigned int prescaler){
@@ -36,11 +36,20 @@ void uart_transmit (uint8_t value){
 	
 }
 
+void transmit_string(char* string){
+	uint8_t i = 0;
+	while(string[i] != '\0'){
+		uart_transmit(string[i]);
+		i++;
+	}
+}
+
 int main(void){
+	board_init();
 	uart_init(BAUD_PRE);
 	
 	while(1){
-		uart_transmit('a');
+		transmit_string("test1_ ");
 	}
 	
 
