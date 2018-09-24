@@ -9,17 +9,35 @@
 
 
 
+
 void uart_init(unsigned int prescaler){
 	//assign the baudrate prescaler
-	UBRR0H = (prescaler >> 8);
 	UBRR0L = prescaler;
+	//assign MSBs
+	UBRR0H = (prescaler >> 8);
 	
-	//enable Tx
+	//enable Tx and Rx
 	UCSR0B |= (1 << TXEN0) | (1 << RXEN0);
 	//enable the interrupt for the receive complete flag
 	UCSR0B |= (1 << RXCIE0);
 	//configure for 1 stop bit and data size of 8 bits
 	UCSR0C |= (1 << UCSZ00) | (1 << UCSZ01);
+	
+	sei();
+	
+	return;
+}
+
+void stopReceive(void){
+	
+	UCSR0B &= ~(1 << RXEN0);
+	
+	return;
+}
+
+void startReceive(void){
+	
+	UCSR0B |= (1 << RXEN0);
 	
 	return;
 }

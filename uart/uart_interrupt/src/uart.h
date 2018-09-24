@@ -15,6 +15,9 @@ void uart_init(unsigned int prescaler);
 void uart_transmit (uint8_t value);
 void transmit_string(char* string);
 
+void stopReceive(void);
+void startReceive(void);
+
 
 
 #endif /* UART_H_ */
