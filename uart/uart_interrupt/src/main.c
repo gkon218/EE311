@@ -37,26 +37,19 @@ ISR (USART_RX_vect)
 	charCount++;
 }
 
+
+volatile uint8_t charIndex = 0;
 ISR (USART_TX_vect)
 {
-
+	charIndex++;
+	uart_transmit(command[charIndex -1]);
 	
-	//command[charCount] = UDR0;
-	
-	//uart_transmit(charCount);
-	if (charCount >= MAX_BUFFER_SIZE){
-		commandReceived = 1;
+	if (command[charIndex -1] == 'd'){
+		
 		cli();
 	}
-	else if (command[charCount] == 'd'){
-		commandReceived = 1;
-		cli();
-	}
-	charCount++;
+	
 }
-
-
-char ReceivedChar;
 
 
 int main(void){
@@ -67,12 +60,14 @@ int main(void){
 
 	while(1){
 		if(commandReceived){
+			
 			commandReceived = 0;
 			charCount = 0;
-			//transmit_string("received ");
-			transmit_string(command);
-			//uart_init(BAUD_PRE);
+			charIndex = 0;
 			sei();
+			uart_transmit((char *)' ');			
+	
+			
 		}
 	}
 	return 0;

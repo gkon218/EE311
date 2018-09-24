@@ -12,7 +12,7 @@
 
 
 void uart_init(unsigned int prescaler);
-void uart_transmit (uint8_t value);
+void uart_transmit (volatile char* value);
 void transmit_string(char* string);
 
 void stopReceive(void);

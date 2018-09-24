@@ -42,7 +42,7 @@ void startReceive(void){
 	return;
 }
 
-void uart_transmit (uint8_t value){
+void uart_transmit (volatile char* value){
 	
 	//The function will be stuck in this while loop until the UART data register is empty
 	while (! (UCSR0A && (1<<UDRE0)) ){}
