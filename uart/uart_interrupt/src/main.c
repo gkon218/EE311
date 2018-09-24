@@ -21,7 +21,7 @@ volatile uint8_t charIndex = 0;
        
 
 volatile char* test[MAX_BUFFER_SIZE] = { '{','a','b','c','d','e','}'};
-//54
+
 
 ISR (USART_RX_vect)
 {
