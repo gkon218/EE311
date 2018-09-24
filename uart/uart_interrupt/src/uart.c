@@ -51,15 +51,3 @@ void uart_transmit (volatile char* value){
 	UDR0 = value;
 	
 }
-
-void transmit_string(char* string){
-	uint8_t i = 0;
-	sei();
-	//while(string[i] <= '\0'){
-	while(i < 8){	
-		if(string[i] != '\0'){
-		uart_transmit(string[i]);
-		}
-		i++;// = i+2;
-	}
-}

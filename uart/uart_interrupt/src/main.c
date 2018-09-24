@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 #include <avr/interrupt.h>
-
+#include <string.h>
 #include "uart.h"
 
 #define MAX_BUFFER_SIZE 50
@@ -18,6 +18,10 @@ volatile char* command[MAX_BUFFER_SIZE];
 volatile uint8_t receivedCommand;
 volatile uint8_t commandReceived = 0; 
 volatile uint8_t charIndex = 0;
+       
+
+volatile char* test[MAX_BUFFER_SIZE] = { '{','a','b','c','d','e','}'};
+//54
 
 ISR (USART_RX_vect)
 {
@@ -37,7 +41,7 @@ ISR (USART_RX_vect)
 		commandReceived = 1;
 		cli();
 		UCSR0B |= (1 << TXEN0); 
-		uart_transmit('&');
+		uart_transmit('\0');
 		
 	}
 	recIndex++;
@@ -49,9 +53,9 @@ ISR (USART_TX_vect)
 {
 		commandReceived = 0;
 		
-	uart_transmit(command[charIndex]);
-	if(charIndex == recIndex){
-	//if (command[charIndex] == 'd'){
+	uart_transmit(test[charIndex]);
+	//if(charIndex == recIndex){
+	if (charIndex >= strlen(test)){
 		//uart_transmit('_');
 		recIndex = 0;
 			charIndex = 0;
