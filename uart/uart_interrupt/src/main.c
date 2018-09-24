@@ -14,21 +14,47 @@
 
 
 volatile uint8_t charCount = 0;
-volatile char* testChar[MAX_BUFFER_SIZE];
+volatile char* command[MAX_BUFFER_SIZE];
 volatile uint8_t receivedCommand;
 volatile uint8_t commandReceived = 0; 
 
 
 ISR (USART_RX_vect)
 {
-	testChar[charCount] = UDR0;
-	charCount++;
+
+	
+	command[charCount] = UDR0;
+	
+	//uart_transmit(charCount);
 	if (charCount >= MAX_BUFFER_SIZE){
 		commandReceived = 1;
-		charCount = 0;
 		cli();
 	}
+	else if (command[charCount] == 'd'){
+		commandReceived = 1;
+		cli();
+	}
+	charCount++;
 }
+
+ISR (USART_TX_vect)
+{
+
+	
+	//command[charCount] = UDR0;
+	
+	//uart_transmit(charCount);
+	if (charCount >= MAX_BUFFER_SIZE){
+		commandReceived = 1;
+		cli();
+	}
+	else if (command[charCount] == 'd'){
+		commandReceived = 1;
+		cli();
+	}
+	charCount++;
+}
+
 
 char ReceivedChar;
 
@@ -42,7 +68,10 @@ int main(void){
 	while(1){
 		if(commandReceived){
 			commandReceived = 0;
-			uart_transmit('b');
+			charCount = 0;
+			//transmit_string("received ");
+			transmit_string(command);
+			//uart_init(BAUD_PRE);
 			sei();
 		}
 	}
