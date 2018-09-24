@@ -13,63 +13,63 @@
 #define MAX_BUFFER_SIZE 50
 
 
-volatile uint8_t charCount = 0;
+volatile uint8_t recIndex = 0;
 volatile char* command[MAX_BUFFER_SIZE];
 volatile uint8_t receivedCommand;
 volatile uint8_t commandReceived = 0; 
-
+volatile uint8_t charIndex = 0;
 
 ISR (USART_RX_vect)
 {
 
 	
-	command[charCount] = UDR0;
+	command[recIndex] = UDR0;
 	
 	//uart_transmit(charCount);
-	if (charCount >= MAX_BUFFER_SIZE){
+	if (recIndex >= MAX_BUFFER_SIZE){
 		commandReceived = 1;
 		cli();
+		UCSR0B |= (1 << TXEN0); 
+		uart_transmit('&');
+		
 	}
-	else if (command[charCount] == 'd'){
+	else if (command[recIndex] == 'd'){
 		commandReceived = 1;
 		cli();
+		UCSR0B |= (1 << TXEN0); 
+		uart_transmit('&');
+		
 	}
-	charCount++;
+	recIndex++;
+	
 }
 
 
-volatile uint8_t charIndex = 0;
 ISR (USART_TX_vect)
 {
-	charIndex++;
-	uart_transmit(command[charIndex -1]);
-	
-	if (command[charIndex -1] == 'd'){
+		commandReceived = 0;
 		
-		cli();
+	uart_transmit(command[charIndex]);
+	if(charIndex == recIndex){
+	//if (command[charIndex] == 'd'){
+		//uart_transmit('_');
+		recIndex = 0;
+			charIndex = 0;
+		//cli();
+		UCSR0B &= ~(1 << TXEN0); 
+		
 	}
-	
+	charIndex++;
 }
-
 
 int main(void){
 	board_init();
 	uart_init(BAUD_PRE);
 
-	sei();
-
 	while(1){
-		if(commandReceived){
-			
-			commandReceived = 0;
-			charCount = 0;
-			charIndex = 0;
-			sei();
-			uart_transmit((char *)' ');			
 	
-			
-		}
 	}
+	
 	return 0;
 }
 
